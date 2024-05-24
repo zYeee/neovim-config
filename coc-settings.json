@@ -1,0 +1,10 @@
+{
+    "pyright.enable": true,
+    "python.analysis.diagnosticMode": "workspace",
+    "python.formatting.provider": "black",
+    "python.formatting.blackArgs": [],
+    "python.formatting.blackPath": "black",
+
+    "ruff.disableDocumentFormatting": true,
+    "ruff.autoFixOnSave": true,
+}
