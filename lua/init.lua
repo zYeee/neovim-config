@@ -24,8 +24,12 @@ require("lazy").setup({
         'maxmx03/solarized.nvim',
         lazy = false,
         priority = 1000,
-        config = function()
-          vim.o.background = 'dark' -- or 'light'
+        ---@type solarized.config
+        opts = {},
+        config = function(_, opts)
+          vim.o.termguicolors = true
+          vim.o.background = 'dark'
+          require('solarized').setup(opts)
           vim.cmd.colorscheme 'solarized'
         end,
     },
@@ -38,18 +42,18 @@ require("lazy").setup({
         "davidhalter/jedi-vim",
         ft = "python",
     },
+    --{
+    --    "jackMort/ChatGPT.nvim",
+    --    event = "VeryLazy",
+    --    dependencies = {
+    --      "MunifTanjim/nui.nvim",
+    --      "nvim-lua/plenary.nvim",
+    --      "folke/trouble.nvim",
+    --      "nvim-telescope/telescope.nvim"
+    --    }
+    --},
     {
-        "jackMort/ChatGPT.nvim",
-        event = "VeryLazy",
-        dependencies = {
-          "MunifTanjim/nui.nvim",
-          "nvim-lua/plenary.nvim",
-          "folke/trouble.nvim",
-          "nvim-telescope/telescope.nvim"
-        }
-    },
-    {
-        'akinsho/toggleterm.nvim', 
+        "akinsho/toggleterm.nvim", 
         version = "*", 
         config = true
     },
@@ -64,8 +68,8 @@ require("lazy").setup({
     "kylechui/nvim-surround",
     "mg979/vim-visual-multi",
     'scrooloose/nerdtree',
-    'jistr/vim-nerdtree-tabs'
-
+    'jistr/vim-nerdtree-tabs',
+    'fatih/vim-go'
 })
 
 local hop = require('hop')
@@ -75,7 +79,7 @@ vim.keymap.set('', '<leader><leader>w', function()
 vim.keymap.set('', '<leader><leader>b', function()
   hop.hint_words({ direction = directions.BEFORE_CURSOR}) end, {remap=tru})
 
-require("chatgpt").setup {}
+-- require("chatgpt").setup {}
 require("toggleterm").setup{
   open_mapping = [[<c-\>]],
 }

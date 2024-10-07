@@ -20,6 +20,8 @@ map <leader><F2> : ls<CR>
 map <leader>y "+y
 map <leader>p "+p
 map <C-g>         : NERDTreeFind<CR>
+map <leader><F2>  : NERDTreeToggle<CR>
+
 
 nmap H gT
 nmap L gt
