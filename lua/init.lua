@@ -15,24 +15,22 @@ vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
     {
+      'sainnhe/sonokai',
+      lazy = false,
+      priority = 1000,
+      config = function()
+        -- Optionally configure and load the colorscheme
+        -- directly inside the plugin declaration.
+        vim.g.sonokai_enable_italic = true
+        vim.cmd.colorscheme('sonokai')
+      end
+    },
+    {
         "Yggdroot/LeaderF",          -- The plugin repository
         event = "VimEnter",
         build = ":LeaderfInstallCExtension",  -- Optional: Install the C extension for performance improvement
     },
     {'smoka7/hop.nvim', version = "*", opts = {}},
-    {
-        'maxmx03/solarized.nvim',
-        lazy = false,
-        priority = 1000,
-        ---@type solarized.config
-        opts = {},
-        config = function(_, opts)
-          vim.o.termguicolors = true
-          vim.o.background = 'dark'
-          require('solarized').setup(opts)
-          vim.cmd.colorscheme 'solarized'
-        end,
-    },
     {
         "neoclide/coc.nvim",
         branch = "release",  -- Specify the release branch
