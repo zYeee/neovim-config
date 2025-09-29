@@ -8,6 +8,7 @@
     "ruff.disableDocumentFormatting": true,
     "ruff.autoFixOnSave": true,
     "cSpell.userWords": [
-      "SLIDERULE"
+      "SLIDERULE",
+      "proto"
     ],
 }
