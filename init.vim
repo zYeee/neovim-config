@@ -1,7 +1,6 @@
 lua require('init')
 
 let mapleader=";"
-set encoding=UTF-8
 let g:Lf_ShortcutB = ''
 
 autocmd VimResume * redraw!
@@ -52,16 +51,10 @@ set cursorline
 set ignorecase
 set cc=120
 set backspace=indent,eol,start
-set nocompatible              " be iMproved
 set noswapfile
 set incsearch
 set smartcase
 set eol
-
-filetype on                   " required!
-filetype plugin on
-filetype plugin indent on     " required!
-syntax on
 
 let g:nerdtree_tabs_open_on_console_startup=1
 let g:NERDTreeWinSize = 30
