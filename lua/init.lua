@@ -36,10 +36,6 @@ require("lazy").setup({
         branch = "release",  -- Specify the release branch
         event = "VimEnter",  -- Optional: Specify an event for lazy loading
     },
-    {
-        "davidhalter/jedi-vim",
-        ft = "python",
-    },
     --{
     --    "jackMort/ChatGPT.nvim",
     --    event = "VeryLazy",
@@ -70,7 +66,7 @@ require("lazy").setup({
     {
         "Carus11/markdown-preview.nvim",
         cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
-        build = "cd app && yarn install",
+        build = function() vim.fn["mkdp#util#install"]() end,
         init = function()
           vim.g.mkdp_filetypes = { "markdown" }
         end,
@@ -78,10 +74,18 @@ require("lazy").setup({
     },
     {
       "coder/claudecode.nvim",
-      dependencies = { "folke/snacks.nvim" },
       config = true,
       opts = {
         auto_start = true,
+      },
+      cmd = {
+        "ClaudeCode",
+        "ClaudeCodeFocus",
+        "ClaudeCodeAdd",
+        "ClaudeCodeSend",
+        "ClaudeCodeDiffAccept",
+        "ClaudeCodeDiffDeny",
+        "ClaudeCodeSelectModel",
       },
       keys = {
         { "<leader>a", nil, desc = "AI/Claude Code" },
@@ -97,7 +101,16 @@ require("lazy").setup({
         { "<leader>ad", "<cmd>ClaudeCodeDiffDeny<cr>", desc = "Deny diff" },
       },
     },
-    "dyng/ctrlsf.vim",
+    {
+      "MagicDuck/grug-far.nvim",
+      cmd = "GrugFar",
+      opts = {},
+      keys = {
+        { "<leader>sr", function() require("grug-far").open() end, desc = "Search & Replace" },
+        { "<leader>sw", function() require("grug-far").open({ prefills = { search = vim.fn.expand("<cword>") } }) end, desc = "Search current word" },
+        { "<leader>sr", function() require("grug-far").with_visual_selection() end, mode = "v", desc = "Search selection" },
+      },
+    },
     "windwp/nvim-autopairs",
     "nvim-lualine/lualine.nvim",
     "nvim-treesitter/nvim-treesitter",
@@ -128,9 +141,11 @@ require("nvim-autopairs").setup {}
 require('gitsigns').setup {}
 require("nvim-surround").setup {}
 require('lualine').setup {options = {theme = 'auto' }}
-require('nvim-treesitter.configs').setup {
-    auto_install = true,
-    highlight = {
-        enable = true,
-    },
-}
+pcall(function()
+    require('nvim-treesitter.configs').setup {
+        auto_install = true,
+        highlight = {
+            enable = true,
+        },
+    }
+end)

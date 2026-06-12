@@ -7,7 +7,7 @@ let g:Lf_ShortcutB = ''
 autocmd VimResume * redraw!
 autocmd FocusGained,BufEnter * checktime
 autocmd BufWritePre *.py :silent call CocAction('runCommand', 'ruff.executeOrganizeImports')
-autocmd BufWritePre *.py :silent call CocAction('format')
+autocmd BufWritePre *.py :silent call CocAction('runCommand', 'ruff.executeFormat')
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree")
       \ && b:NERDTree.isTabTree()) | q | endif
 
@@ -25,12 +25,13 @@ map <leader><F2>  : NERDTreeToggle<CR>
 
 nmap H gT
 nmap L gt
-nmap <C-f> :CtrlSF  
-nmap <C-f>; :CtrlSFToggle<CR>
-nmap <leader>a <Plug>(coc-codeaction-selected)
+nnoremap <C-f> <cmd>GrugFar<CR>
+nmap <silent> <C-]> <Plug>(coc-definition)
+nmap <silent> gd <Plug>(coc-definition)
+nmap <leader>ca <Plug>(coc-codeaction-selected)
 nmap <leader><leader>t :ToggleTerm direction=float<CR>
 
-vmap <leader>a <Plug>(coc-codeaction-selected)
+vmap <leader>ca <Plug>(coc-codeaction-selected)
 vmap <leader>tr :ToggleTermSendVisualLines<CR>
 
 
@@ -40,7 +41,7 @@ inoremap <C-j> <Down>
 inoremap <C-k> <Up>
 inoremap <C-l> <Right>
 
-nnoremap <C-w><C-]> :split<CR>:call jedi#goto_definitions()<CR>
+nnoremap <silent> <C-w><C-]> :call CocAction('jumpDefinition', 'split')<CR>
 tnoremap <Esc> <C-\><C-n><CR>
 
 
@@ -72,16 +73,7 @@ let g:Lf_ShortcutF = '<C-P>'
 let g:Lf_ShowDevIcons = 1
 let g:Lf_UseCache = 0
 
-let g:python3_host_prog = '/Users/yzhu/.asdf/shims/python3'
-
-let g:ctrlsf_auto_focus = {
-    \ "at": "start"
-    \ }
-
-let g:jedi#goto_assignments_command = "<C-]>"
-let g:jedi#completions_command = "<C-j>"
-let g:jedi#force_py_version = 3
-let g:jedi#popup_select_first = 1
+let g:python3_host_prog = '/usr/bin/python3'
 
 command! -nargs=0 Format :call CocActionAsync('format')
 

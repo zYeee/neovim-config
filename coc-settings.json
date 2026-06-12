@@ -1,11 +1,9 @@
 {
     "pyright.enable": true,
-    "python.analysis.diagnosticMode": "workspace",
-    "python.formatting.provider": "black",
-    "python.formatting.blackArgs": [],
-    "python.formatting.blackPath": "black",
+    "python.analysis.diagnosticMode": "openFilesOnly",
+    "python.formatting.provider": "none",
 
-    "ruff.disableDocumentFormatting": true,
+    "ruff.disableDocumentFormatting": false,
     "ruff.autoFixOnSave": true,
     "cSpell.userWords": [
       "SLIDERULE",
