@@ -64,13 +64,10 @@ require("lazy").setup({
         -- See Commands section for default commands if you want to lazy load on them
     },
     {
-        "Carus11/markdown-preview.nvim",
-        cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
-        build = function() vim.fn["mkdp#util#install"]() end,
-        init = function()
-          vim.g.mkdp_filetypes = { "markdown" }
-        end,
-        ft = { "markdown" },
+        -- In-editor markdown rendering (replaces browser-based markdown-preview).
+        -- Recommended to NOT lazy-load; markview manages its own lazy-loading.
+        "OXY2DEV/markview.nvim",
+        lazy = false,
     },
     {
       "coder/claudecode.nvim",
