@@ -1,6 +1,5 @@
 lua require('init')
 
-let mapleader=";"
 let g:Lf_ShortcutB = ''
 
 autocmd VimResume * redraw!
@@ -11,30 +10,30 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree")
       \ && b:NERDTree.isTabTree()) | q | endif
 
 
-map <c-h> <c-w>h
-map <c-j> <c-w>j
-map <c-k> <c-w>k
-map <c-l> <c-w>l
-map <leader>ls : ls<CR>
-map <leader>y "+y
-map <leader>p "+p
-map <C-g>         : NERDTreeFind<CR>
-map <leader><F2>  : NERDTreeToggle<CR>
+noremap <c-h> <c-w>h
+noremap <c-j> <c-w>j
+noremap <c-k> <c-w>k
+noremap <c-l> <c-w>l
+noremap <leader>ls : ls<CR>
+noremap <leader>y "+y
+noremap <leader>p "+p
+noremap <C-g>         : NERDTreeFind<CR>
+noremap <leader><F2>  : NERDTreeToggle<CR>
 
 
-nmap H gT
-nmap L gt
+nnoremap H gT
+nnoremap L gt
 nnoremap <C-f> <cmd>GrugFar<CR>
 nmap <silent> <C-]> <Plug>(coc-definition)
 nmap <silent> gd <Plug>(coc-definition)
 nmap <leader>ca <Plug>(coc-codeaction-selected)
-nmap <leader><leader>t :ToggleTerm direction=float<CR>
+nnoremap <leader><leader>t :ToggleTerm direction=float<CR>
 
 vmap <leader>ca <Plug>(coc-codeaction-selected)
-vmap <leader>tr :ToggleTermSendVisualLines<CR>
+vnoremap <leader>tr :ToggleTermSendVisualLines<CR>
 
 
-imap jj <Esc><Right>
+inoremap jj <Esc><Right>
 
 inoremap <C-j> <Down>
 inoremap <C-k> <Up>

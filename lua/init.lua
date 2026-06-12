@@ -47,9 +47,9 @@ require("lazy").setup({
     --    }
     --},
     {
-        "akinsho/toggleterm.nvim", 
-        version = "*", 
-        config = true
+        "akinsho/toggleterm.nvim",
+        version = "*",
+        opts = { open_mapping = [[<c-\>]] },
     },
     {
         "CopilotC-Nvim/CopilotChat.nvim",
@@ -108,18 +108,18 @@ require("lazy").setup({
         { "<leader>sr", function() require("grug-far").with_visual_selection() end, mode = "v", desc = "Search selection" },
       },
     },
-    "windwp/nvim-autopairs",
-    "nvim-lualine/lualine.nvim",
+    { "windwp/nvim-autopairs", event = "InsertEnter", config = true },
+    { "nvim-lualine/lualine.nvim", event = "VeryLazy", opts = { options = { theme = "auto" } } },
     { "nvim-treesitter/nvim-treesitter", branch = "master", build = ":TSUpdate" },
-    "mhinz/vim-startify",
-    "github/copilot.vim",
+    "mhinz/vim-startify",  -- dashboard: must load at startup
     "ruanyl/vim-gh-line",
-    "lewis6991/gitsigns.nvim",
-    "kylechui/nvim-surround",
-    "mg979/vim-visual-multi",
-    'scrooloose/nerdtree',
+    { "lewis6991/gitsigns.nvim", event = { "BufReadPre", "BufNewFile" }, config = true },
+    { "kylechui/nvim-surround", event = "VeryLazy", config = true },
+    { "mg979/vim-visual-multi", event = "VeryLazy" },
+    'scrooloose/nerdtree',       -- opened on startup via nerdtree-tabs; keep eager
     'jistr/vim-nerdtree-tabs',
-    'fatih/vim-go'
+    { "fatih/vim-go", ft = "go" },
+    -- copilot.vim is installed as a CopilotChat dependency above (was duplicated here)
 })
 
 local hop = require('hop')
@@ -129,15 +129,8 @@ vim.keymap.set('', '<leader><leader>w', function()
 vim.keymap.set('', '<leader><leader>b', function()
   hop.hint_words({ direction = directions.BEFORE_CURSOR}) end, {remap=true})
 
--- require("chatgpt").setup {}
-require("toggleterm").setup{
-  open_mapping = [[<c-\>]],
-}
-
-require("nvim-autopairs").setup {}
-require('gitsigns').setup {}
-require("nvim-surround").setup {}
-require('lualine').setup {options = {theme = 'auto' }}
+-- Plugin setup() calls now live in their lazy specs above (config = true / opts).
+-- Treesitter keeps its setup here so it loads eagerly for highlighting.
 pcall(function()
     require('nvim-treesitter.configs').setup {
         auto_install = true,
