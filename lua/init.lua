@@ -113,7 +113,7 @@ require("lazy").setup({
     },
     "windwp/nvim-autopairs",
     "nvim-lualine/lualine.nvim",
-    "nvim-treesitter/nvim-treesitter",
+    { "nvim-treesitter/nvim-treesitter", branch = "master", build = ":TSUpdate" },
     "mhinz/vim-startify",
     "github/copilot.vim",
     "ruanyl/vim-gh-line",
@@ -130,7 +130,7 @@ local directions = require('hop.hint').HintDirection
 vim.keymap.set('', '<leader><leader>w', function()
   hop.hint_words({ direction = directions.AFTER_CURSOR}) end, {remap=true})
 vim.keymap.set('', '<leader><leader>b', function()
-  hop.hint_words({ direction = directions.BEFORE_CURSOR}) end, {remap=tru})
+  hop.hint_words({ direction = directions.BEFORE_CURSOR}) end, {remap=true})
 
 -- require("chatgpt").setup {}
 require("toggleterm").setup{

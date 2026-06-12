@@ -16,7 +16,7 @@ map <c-h> <c-w>h
 map <c-j> <c-w>j
 map <c-k> <c-w>k
 map <c-l> <c-w>l
-map <leader><F2> : ls<CR>
+map <leader>ls : ls<CR>
 map <leader>y "+y
 map <leader>p "+p
 map <C-g>         : NERDTreeFind<CR>
@@ -42,7 +42,7 @@ inoremap <C-k> <Up>
 inoremap <C-l> <Right>
 
 nnoremap <silent> <C-w><C-]> :call CocAction('jumpDefinition', 'split')<CR>
-tnoremap <Esc> <C-\><C-n><CR>
+tnoremap <Esc> <C-\><C-n>
 
 
 set shiftwidth=4
