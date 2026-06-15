@@ -15,15 +15,19 @@ vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
     {
-      'sainnhe/sonokai',
+      'ellisonleao/gruvbox.nvim',
+      name = 'gruvbox',
       lazy = false,
       priority = 1000,
       config = function()
-        -- Optionally configure and load the colorscheme
-        -- directly inside the plugin declaration.
-        vim.g.sonokai_enable_italic = true
-        vim.cmd.colorscheme('sonokai')
-      end
+        -- Match the Ghostty "Gruvbox Dark" theme. transparent_mode clears the
+        -- editor background so Ghostty's semi-transparent background
+        -- (background-opacity 0.9 + background-blur-radius 20) shows through,
+        -- giving Neovim the same translucent look as the terminal.
+        require('gruvbox').setup({ transparent_mode = true })
+        vim.o.background = 'dark'
+        vim.cmd.colorscheme('gruvbox')
+      end,
     },
     {
         "Yggdroot/LeaderF",          -- The plugin repository
@@ -110,7 +114,9 @@ require("lazy").setup({
     },
     { "windwp/nvim-autopairs", event = "InsertEnter", config = true },
     { "nvim-lualine/lualine.nvim", event = "VeryLazy", opts = { options = { theme = "auto" } } },
-    { "nvim-treesitter/nvim-treesitter", branch = "master", build = ":TSUpdate" },
+    -- Tracks the maintained `main` branch (the `master` branch is archived).
+    -- main does not support lazy-loading, hence lazy = false.
+    { "nvim-treesitter/nvim-treesitter", lazy = false, build = ":TSUpdate" },
     "mhinz/vim-startify",  -- dashboard: must load at startup
     "ruanyl/vim-gh-line",
     { "lewis6991/gitsigns.nvim", event = { "BufReadPre", "BufNewFile" }, config = true },
@@ -130,12 +136,23 @@ vim.keymap.set('', '<leader><leader>b', function()
   hop.hint_words({ direction = directions.BEFORE_CURSOR}) end, {remap=true})
 
 -- Plugin setup() calls now live in their lazy specs above (config = true / opts).
--- Treesitter keeps its setup here so it loads eagerly for highlighting.
-pcall(function()
-    require('nvim-treesitter.configs').setup {
-        auto_install = true,
-        highlight = {
-            enable = true,
-        },
-    }
-end)
+-- nvim-treesitter `main` API (the legacy `nvim-treesitter.configs` setup with
+-- `auto_install`/`highlight.enable` only existed on the archived `master` branch).
+-- setup{} is optional but pins the install dir; install() is async and a no-op
+-- for parsers that are already installed.
+require('nvim-treesitter').setup {}
+require('nvim-treesitter').install {
+  'python', 'go', 'lua', 'markdown', 'markdown_inline', 'json', 'yaml', 'bash',
+}
+
+-- The bash parser also highlights `sh`-filetype shell scripts.
+vim.treesitter.language.register('bash', 'sh')
+
+-- Highlighting is no longer enabled automatically on `main`; start it per buffer.
+-- pcall guards the first launch, where install() may still be running async and
+-- the parser is not yet on the runtimepath. (markdown_inline has no standalone
+-- filetype — it is injected into markdown buffers, which markview relies on.)
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = { 'python', 'go', 'lua', 'markdown', 'json', 'yaml', 'sh', 'bash' },
+  callback = function() pcall(vim.treesitter.start) end,
+})
