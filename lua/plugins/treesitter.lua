@@ -8,8 +8,11 @@ return {
     -- main API: setup{} is optional but pins the install dir; install() is
     -- async and a no-op for parsers that are already installed.
     require("nvim-treesitter").setup({})
+    -- `vim` is installed so vimscript injected into Lua (e.g. vim.cmd("…"))
+    -- uses nvim-treesitter's parser+query, not Neovim's bundled pair which
+    -- currently drift on nightly (query references a `tab` node the parser lacks).
     require("nvim-treesitter").install({
-      "python", "go", "lua", "markdown", "markdown_inline", "json", "yaml", "bash",
+      "python", "go", "lua", "markdown", "markdown_inline", "json", "yaml", "bash", "vim",
     })
 
     -- The bash parser also highlights `sh`-filetype shell scripts.
@@ -21,7 +24,7 @@ return {
     -- (markdown_inline has no standalone filetype — it is injected into
     -- markdown buffers, which markview relies on.)
     vim.api.nvim_create_autocmd("FileType", {
-      pattern = { "python", "go", "lua", "markdown", "json", "yaml", "sh", "bash" },
+      pattern = { "python", "go", "lua", "markdown", "json", "yaml", "sh", "bash", "vim" },
       callback = function() pcall(vim.treesitter.start) end,
     })
   end,
