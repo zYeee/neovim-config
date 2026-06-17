@@ -12,6 +12,8 @@ return {
     -- Highlight references of the symbol under the cursor (via LSP); jump
     -- between them with ]r / [r.
     words = { enabled = true },
+    -- Indent guides + current-scope highlight (handy in Python).
+    indent = { enabled = true },
     dashboard = {
       enabled = true,
       preset = {
