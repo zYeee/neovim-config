@@ -25,7 +25,8 @@ return {
       map("n", "<leader>hp", gs.preview_hunk, "preview hunk")
 
       -- Blame
-      map("n", "<leader>hb", function() gs.blame_line({ full = true }) end, "blame line")
+      map("n", "<leader>hb", function() gs.blame_line({ full = true }) end, "blame line (popup)")
+      map("n", "<leader>gB", gs.blame, "blame file (side panel)")
       map("n", "<leader>tb", gs.toggle_current_line_blame, "toggle inline blame")
 
       -- Diff
