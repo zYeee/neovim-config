@@ -41,5 +41,8 @@ return {
     -- are taken by Neovim's Python ftplugin for function/class navigation.)
     { "]r", function() Snacks.words.jump(vim.v.count1) end, desc = "Next reference" },
     { "[r", function() Snacks.words.jump(-vim.v.count1) end, desc = "Prev reference" },
+    -- Open the current file + line on the git remote (replaces vim-gh-line).
+    { "<leader>gh", function() Snacks.gitbrowse({ what = "file" }) end, mode = { "n", "x" }, desc = "Open file/line in browser" },
+    { "<leader>go", function() Snacks.gitbrowse({ what = "repo" }) end, desc = "Open repo in browser" },
   },
 }
