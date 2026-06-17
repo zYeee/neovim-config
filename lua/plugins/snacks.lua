@@ -1,10 +1,17 @@
--- Lua dashboard (replaces vim-startify). Only the dashboard module is enabled;
--- the rest of snacks stays off. Must load at startup, hence lazy = false.
+-- Lua dashboard (replaces vim-startify) + a couple of passive modules.
+-- Must load at startup, hence lazy = false.
 return {
   "folke/snacks.nvim",
   priority = 1000,
   lazy = false,
   opts = {
+    -- Render a file given on the command line before plugins load (faster open).
+    quickfile = { enabled = true },
+    -- Disable heavy features (treesitter/LSP/etc.) on very large files.
+    bigfile = { enabled = true },
+    -- Highlight references of the symbol under the cursor (via LSP); jump
+    -- between them with ]r / [r.
+    words = { enabled = true },
     dashboard = {
       enabled = true,
       preset = {
@@ -26,5 +33,11 @@ return {
         { section = "startup" },
       },
     },
+  },
+  keys = {
+    -- Jump between references of the symbol under the cursor. (Not ]]/[[ — those
+    -- are taken by Neovim's Python ftplugin for function/class navigation.)
+    { "]r", function() Snacks.words.jump(vim.v.count1) end, desc = "Next reference" },
+    { "[r", function() Snacks.words.jump(-vim.v.count1) end, desc = "Prev reference" },
   },
 }
