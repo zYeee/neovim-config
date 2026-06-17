@@ -10,6 +10,7 @@ return {
       { "<leader>a", group = "AI / Claude" },
       { "<leader>h", group = "git hunks" },
       { "<leader>d", group = "diff / review" },
+      { "<leader>f", group = "find / picker" },
       { "<leader>s", group = "search / replace" },
       { "<leader>t", group = "toggle" },
       { "<leader>g", group = "git / GitHub" },

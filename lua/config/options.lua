@@ -14,7 +14,3 @@ opt.backspace = { "indent", "eol", "start" }
 opt.swapfile = false
 opt.incsearch = true
 opt.endofline = true
-
--- Pin the Python provider: this interpreter (3.9.6) ships pynvim; homebrew's
--- python3 does not, so leaving it to auto-detection risks breaking providers.
-vim.g.python3_host_prog = "/usr/bin/python3"

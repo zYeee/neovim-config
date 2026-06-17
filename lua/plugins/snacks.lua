@@ -14,13 +14,15 @@ return {
     words = { enabled = true },
     -- Indent guides + current-scope highlight (handy in Python).
     indent = { enabled = true },
+    -- Fuzzy finder (replaces LeaderF): files, grep, buffers, recent, LSP, …
+    picker = { enabled = true },
     dashboard = {
       enabled = true,
       preset = {
         -- Actions wired to the tools this config already ships.
         keys = {
-          { icon = " ", key = "f", desc = "Find File", action = ":Leaderf file" },
-          { icon = " ", key = "r", desc = "Recent Files", action = ":Leaderf mru" },
+          { icon = " ", key = "f", desc = "Find File", action = function() Snacks.picker.files() end },
+          { icon = " ", key = "r", desc = "Recent Files", action = function() Snacks.picker.recent() end },
           { icon = " ", key = "g", desc = "Find Text", action = ":GrugFar" },
           { icon = " ", key = "n", desc = "New File", action = ":ene | startinsert" },
           { icon = " ", key = "c", desc = "Config", action = ":edit $MYVIMRC" },
@@ -44,5 +46,11 @@ return {
     -- Open the current file + line on the git remote (replaces vim-gh-line).
     { "<leader>gh", function() Snacks.gitbrowse({ what = "file" }) end, mode = { "n", "x" }, desc = "Open file/line in browser" },
     { "<leader>go", function() Snacks.gitbrowse({ what = "repo" }) end, desc = "Open repo in browser" },
+    -- Picker (replaces LeaderF). <C-p> keeps the old file-search shortcut.
+    { "<C-p>", function() Snacks.picker.files() end, desc = "Find files" },
+    { "<leader>ff", function() Snacks.picker.files() end, desc = "Find files" },
+    { "<leader>fg", function() Snacks.picker.grep() end, desc = "Grep (live)" },
+    { "<leader>fr", function() Snacks.picker.recent() end, desc = "Recent files" },
+    { "<leader>fb", function() Snacks.picker.buffers() end, desc = "Buffers" },
   },
 }
