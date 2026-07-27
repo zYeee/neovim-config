@@ -15,7 +15,28 @@ return {
     -- Indent guides + current-scope highlight (handy in Python).
     indent = { enabled = true },
     -- Fuzzy finder (replaces LeaderF): files, grep, buffers, recent, LSP, …
-    picker = { enabled = true },
+    picker = {
+      enabled = true,
+      sources = {
+        explorer = {
+          -- Copy the full path of the item to the system clipboard.
+          -- (Plain `y` yanks to the unnamed register, not the OS clipboard.)
+          actions = {
+            copy_file_path = function(_, item)
+              if not item then
+                return
+              end
+              local path = Snacks.picker.util.path(item) or item.file
+              vim.fn.setreg("+", path)
+              Snacks.notify.info("Copied to clipboard:\n" .. path)
+            end,
+          },
+          win = { list = { keys = { ["t"] = "tab", ["Y"] = "copy_file_path" } } },
+        },
+      },
+    },
+    -- File-tree sidebar (replaces NERDTree); git- and diagnostics-aware.
+    explorer = { enabled = true },
     dashboard = {
       enabled = true,
       preset = {
@@ -52,5 +73,8 @@ return {
     { "<leader>fg", function() Snacks.picker.grep() end, desc = "Grep (live)" },
     { "<leader>fr", function() Snacks.picker.recent() end, desc = "Recent files" },
     { "<leader>fb", function() Snacks.picker.buffers() end, desc = "Buffers" },
+    -- File explorer (replaces NERDTree). Auto-follows the current file, so no
+    -- separate "find/reveal" key is needed.
+    { "<leader><F2>", function() Snacks.explorer() end, desc = "Toggle file explorer" },
   },
 }
