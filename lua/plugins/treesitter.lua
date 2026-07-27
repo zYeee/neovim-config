@@ -11,9 +11,13 @@ return {
     -- `vim` is installed so vimscript injected into Lua (e.g. vim.cmd("…"))
     -- uses nvim-treesitter's parser+query, not Neovim's bundled pair which
     -- currently drift on nightly (query references a `tab` node the parser lacks).
-    require("nvim-treesitter").install({
+    local parsers = {
       "python", "go", "lua", "markdown", "markdown_inline", "json", "yaml", "bash", "vim",
-    })
+    }
+    -- Exported so setup.sh can install the same set headlessly (install() is
+    -- async, so a headless `nvim +qa` would otherwise exit mid-download).
+    vim.g.nvim_treesitter_parsers = parsers
+    require("nvim-treesitter").install(parsers)
 
     -- The bash parser also highlights `sh`-filetype shell scripts.
     vim.treesitter.language.register("bash", "sh")
