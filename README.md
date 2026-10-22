@@ -1,6 +1,6 @@
 # neovim-config
 
-My terminal environment in one repo — **Neovim**, **Ghostty** and **cmux** — reproducible on a
+My terminal environment in one repo — **Neovim**, **Ghostty**, **cmux** and **Starship** — reproducible on a
 new Mac with a single command.
 
 ```sh
@@ -26,14 +26,17 @@ changes nothing.
    Command Line Tools installer if missing.
 2. **Homebrew** — installs it if absent, then adds it to `PATH` for the rest of the run.
 3. **Packages** — `brew bundle` over the [`Brewfile`](Brewfile): the two terminals, the Nerd Font,
-   and Neovim's runtime deps.
+   Starship prompt, and Neovim's runtime deps.
 4. **Neovim** — installed as `brew install --HEAD neovim` because this config uses 0.12+ APIs
    (`vim.lsp.config`, nvim-treesitter's `main` branch). Already on 0.12+? It's skipped, so
    re-running never triggers a source rebuild.
 5. **pyright** — `npm install -g pyright` (the only dependency not available via Homebrew).
 6. **Symlinks** — see the table below. Anything already sitting at one of those paths is moved to
    `<path>.bak.<timestamp>`, never deleted.
-7. **Plugins** — `nvim --headless "+Lazy! sync"`, then compiles the treesitter parsers and waits
+7. **Shell prompt** — links the Gruvbox Starship config and appends initialization to
+   `~/.zshrc` (or `$ZDOTDIR/.zshrc`), preserving existing settings and backing up the file first.
+   An existing Starship initialization is left in place. New shells load Homebrew if needed.
+8. **Plugins** — `nvim --headless "+Lazy! sync"`, then compiles the treesitter parsers and waits
    for them (the install is async, so a plain headless run would exit mid-download).
 
 It ends with a status report. Every step is a no-op once satisfied — re-run it any time.
@@ -43,6 +46,11 @@ It ends with a status report. Every step is a no-op once satisfied — re-run it
 | *(repo root)*    | `~/.config/nvim`         |
 | `ghostty/`       | `~/.config/ghostty`      |
 | `cmux/cmux.json` | `~/.config/cmux/cmux.json` |
+| `shell/starship.toml` | `~/.config/starship.toml` |
+| `shell/starship.zsh` | `~/.config/shell/starship.zsh` |
+
+Config destinations respect `XDG_CONFIG_HOME`; the Starship theme also respects an existing
+`STARSHIP_CONFIG` override. Keep these variables consistent between setup and terminal sessions.
 
 cmux is linked at file level on purpose: `~/.config/cmux` also holds session state and multi-MB
 event logs that have no business in git.
@@ -71,6 +79,7 @@ event logs that have no business in git.
 │   └── plugins/        one file per plugin spec
 ├── ghostty/config      Ghostty settings
 ├── cmux/cmux.json      cmux shortcut bindings
+├── shell/              Starship theme and zsh initialization
 └── coc-settings.json   unused leftover from the pre-native-LSP era
 ```
 
@@ -113,6 +122,13 @@ editor — the two configs are matched on purpose.
 Only the shortcut bindings are tracked: `cmd+h` / `cmd+l` for previous/next surface, matching the
 Ghostty tab keys so the same fingers work in both.
 
+### Shell prompt
+
+Starship uses the included Gruvbox Powerline-style theme for the path, Git branch/status,
+language versions and time in both terminals. The Nerd Font above supplies its icons.
+The terminal's Gruvbox color scheme and the shell prompt are configured separately;
+`setup.sh` installs both. No oh-my-zsh installation is required.
+
 ---
 
 ## Keymap cheat sheet
@@ -143,6 +159,7 @@ buffer-local maps.
 ## After the first run
 
 - Launch Ghostty and cmux once so macOS clears the Gatekeeper prompt.
+- Open a new terminal tab or run `exec zsh` to load the Starship prompt.
 - `:Copilot setup` — CopilotChat needs a one-time GitHub auth.
 - claudecode.nvim expects the Claude Code CLI on `PATH`.
 - Go isn't installed by default. For gopls:
@@ -161,8 +178,8 @@ After pulling on another machine, `./setup.sh` picks up any new dependency.
 - cmux writes `cmux.json` when you change shortcuts in its UI. It may replace the symlink with a
   regular file; `./setup.sh --check` will flag that, and re-running `./setup.sh` re-links it (your
   version is backed up first, so nothing is lost).
-- Not covered here: zsh / oh-my-zsh / starship, git config, and everything else in `~`. This repo
-  is deliberately scoped to the editor and the two terminals.
+- The zsh prompt is included; other personal zsh settings, oh-my-zsh plugins, git config,
+  and unrelated files in `~` are not copied or replaced.
 
 ## Troubleshooting
 
@@ -170,6 +187,7 @@ After pulling on another machine, `./setup.sh` picks up any new dependency.
 | ------- | --- |
 | `nvim` older than 0.12 | `brew install --HEAD neovim` |
 | Missing icons / boxes in the UI | `brew install --cask font-jetbrains-mono-nerd-font`, then set the terminal font |
+| Shell prompt has no theme | Re-run `./setup.sh`, then `exec zsh`; `./setup.sh --check` checks Starship and its config/init |
 | A language server never attaches | `:checkhealth vim.lsp` — its binary is probably not on `PATH` |
 | Parsers failed to build | `brew install tree-sitter-cli`, then `:TSUpdate` |
 | A cask says the app already exists | `brew install --cask --adopt cmux` (or `ghostty`) |

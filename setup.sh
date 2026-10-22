@@ -15,6 +15,7 @@ set -euo pipefail
 REPO_HTTPS="https://github.com/zYeee/neovim-config.git"
 CLONE_DIR="${NVIM_CONFIG_DIR:-$HOME/source/neovim-config}"
 XDG_CONFIG="${XDG_CONFIG_HOME:-$HOME/.config}"
+ZSHRC="${ZDOTDIR:-$HOME}/.zshrc"
 STAMP="$(date +%Y%m%d%H%M%S)"
 
 DRY_RUN=0
@@ -258,6 +259,31 @@ link_configs() {
   # File-level for cmux: ~/.config/cmux also holds runtime state (session
   # locks, multi-MB event logs) that must stay out of git.
   link "cmux/cmux.json" "$XDG_CONFIG/cmux/cmux.json"
+  link "shell/starship.toml" "${STARSHIP_CONFIG:-$XDG_CONFIG/starship.toml}"
+  link "shell/starship.zsh" "$XDG_CONFIG/shell/starship.zsh"
+}
+
+has_starship_init() {
+  [ -f "$ZSHRC" ] && grep -Eq '^[[:space:]]*(eval .*starship init zsh|source .*shell/starship\.zsh)' "$ZSHRC"
+}
+
+setup_shell() {
+  step "Zsh prompt"
+  if has_starship_init; then
+    skip "Starship already initialized in $ZSHRC"
+    return 0
+  fi
+  if [ "$DRY_RUN" -eq 1 ]; then
+    info "append Starship initialization to $ZSHRC (back up existing file first)"
+    return 0
+  fi
+  if [ -e "$ZSHRC" ]; then
+    run cp -p "$ZSHRC" "$ZSHRC.bak.$STAMP"
+  fi
+  run mkdir -p "$(dirname "$ZSHRC")"
+  printf '\n# Starship prompt — managed by neovim-config setup.sh\nsource %q\n' \
+    "$XDG_CONFIG/shell/starship.zsh" >> "$ZSHRC"
+  ok "Starship enabled in $ZSHRC"
 }
 
 sync_plugins() {
@@ -326,11 +352,20 @@ doctor() {
   check_bin "pyright-langserver" "Python LSP"
   check_bin "ruff"               "Python lint/format"
   check_bin "typos-lsp"          "spell diagnostics"
+  check_bin "starship"           "shell prompt"
 
   printf '\n'
   check_link "$XDG_CONFIG/nvim" ""
   check_link "$XDG_CONFIG/ghostty" "ghostty"
   check_link "$XDG_CONFIG/cmux/cmux.json" "cmux/cmux.json"
+  check_link "${STARSHIP_CONFIG:-$XDG_CONFIG/starship.toml}" "shell/starship.toml"
+  check_link "$XDG_CONFIG/shell/starship.zsh" "shell/starship.zsh"
+  if has_starship_init; then
+    ok "Starship initialization in $ZSHRC"
+  else
+    bad "Starship initialization missing from $ZSHRC"
+    MISSING=$((MISSING + 1))
+  fi
 
   printf '\n'
   # Optional extras — absent on the machine this repo came from.
@@ -362,6 +397,7 @@ else
   skip "--skip-brew"
 fi
 link_configs
+setup_shell
 if [ "$SKIP_PLUGINS" -eq 0 ]; then
   sync_plugins
 else
@@ -383,6 +419,7 @@ ${BOLD}Next steps${OFF}
   2. Run ${BOLD}nvim${OFF}; the dashboard means everything loaded.
   3. GitHub Copilot chat needs one-time auth: ${BOLD}:Copilot setup${OFF}
   4. claudecode.nvim needs the Claude Code CLI on \$PATH.
+  5. Open a new terminal tab or run exec zsh to load the Starship prompt.
 
 Configs are symlinked from ${REPO} — edit there and commit.
 EOF

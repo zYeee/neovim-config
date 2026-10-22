@@ -13,6 +13,9 @@ cask "cmux"    # configured by cmux/cmux.json
 # lualine and blink.cmp draw (blink is configured with nerd_font_variant=mono).
 cask "font-jetbrains-mono-nerd-font"
 
+# Shell prompt (shared by Ghostty and cmux).
+brew "starship"
+
 # --- Neovim runtime --------------------------------------------------------
 brew "tree-sitter-cli" # nvim-treesitter `main` compiles parsers with this
 brew "node"            # pyright (installed via npm) and a few plugin builds
